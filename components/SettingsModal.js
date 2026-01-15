@@ -5,7 +5,9 @@ const SettingsModal = ({ visible, onClose, onSave, initialValues }) => {
     const [maxTemp, setMaxTemp] = useState('');
     const [minTemp, setMinTemp] = useState('');
     const [maxHum, setMaxHum] = useState('');
+
     const [minHum, setMinHum] = useState('');
+    const [influxToken, setInfluxToken] = useState('');
 
     useEffect(() => {
         if (visible && initialValues) {
@@ -13,6 +15,7 @@ const SettingsModal = ({ visible, onClose, onSave, initialValues }) => {
             setMinTemp(initialValues.minTemp.toString());
             setMaxHum(initialValues.maxHum.toString());
             setMinHum(initialValues.minHum.toString());
+            setInfluxToken(initialValues.influxToken || '');
         }
     }, [visible, initialValues]);
 
@@ -41,7 +44,8 @@ const SettingsModal = ({ visible, onClose, onSave, initialValues }) => {
             maxTemp: maxT,
             minTemp: minT,
             maxHum: maxH,
-            minHum: minH
+            minHum: minH,
+            influxToken: influxToken.trim()
         });
         onClose();
     };
@@ -64,6 +68,22 @@ const SettingsModal = ({ visible, onClose, onSave, initialValues }) => {
                             <TouchableOpacity onPress={onClose}>
                                 <Text style={styles.closeButton}>Cancel</Text>
                             </TouchableOpacity>
+                        </View>
+
+                        <Text style={styles.sectionTitle}>InfluxDB Token (Secure)</Text>
+                        <View style={styles.inputRow}>
+                            <View style={[styles.inputGroup, { width: '100%' }]}>
+                                <Text style={styles.label}>Token</Text>
+                                <TextInput
+                                    style={styles.input}
+                                    value={influxToken}
+                                    onChangeText={setInfluxToken}
+                                    placeholder="Paste InfluxDB Token"
+                                    secureTextEntry
+                                    autoCapitalize="none"
+                                    autoCorrect={false}
+                                />
+                            </View>
                         </View>
 
                         <Text style={styles.sectionTitle}>Temperature (°C)</Text>

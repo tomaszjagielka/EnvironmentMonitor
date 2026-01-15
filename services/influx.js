@@ -1,6 +1,6 @@
-import { INFLUX_URL, INFLUX_TOKEN, ORG_ID, BUCKET } from '../constants/config';
+import { INFLUX_URL, ORG_ID, BUCKET } from '../constants/config';
 
-export async function fetchSensorData() {
+export async function fetchSensorData(token) {
     const query = `
       from(bucket: "${BUCKET}")
         |> range(start: -24h)
@@ -10,10 +10,15 @@ export async function fetchSensorData() {
         |> yield(name: "mean")
       `;
 
+    // Only proceed if token is provided
+    if (!token) {
+        throw new Error("No InfluxDB Token provided. Please check Settings.");
+    }
+
     const response = await fetch(`${INFLUX_URL}/api/v2/query?orgID=${ORG_ID}`, {
         method: 'POST',
         headers: {
-            'Authorization': `Token ${INFLUX_TOKEN}`,
+            'Authorization': `Token ${token}`,
             'Content-Type': 'application/vnd.flux',
         },
         body: query,

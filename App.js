@@ -21,7 +21,8 @@ export default function App() {
     maxTemp: 26,
     minTemp: 18,
     maxHum: 65,
-    minHum: 30
+    minHum: 30,
+    influxToken: ''
   });
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -55,14 +56,15 @@ export default function App() {
   const fetchData = useCallback(async () => {
     try {
       setError(null);
-      const parsedData = await fetchSensorData();
+      setError(null);
+      const parsedData = await fetchSensorData(thresholds.influxToken);
       setSensors(parsedData);
       setLastUpdated(new Date());
     } catch (e) {
       console.error(e);
       setError(`Error: ${e.message}\nCheck log for details.`);
     }
-  }, []);
+  }, [thresholds]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
